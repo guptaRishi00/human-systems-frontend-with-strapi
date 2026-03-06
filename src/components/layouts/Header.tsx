@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowRoundForward } from "react-icons/io";
-import { IoChevronDown } from "react-icons/io5";
+import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 
 export default function Header() {
   const headerRef = useRef<HTMLElement | null>(null);
   const lastScroll = useRef(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -23,7 +24,7 @@ export default function Header() {
         header.classList.remove("bg-[#013228]", "shadow-md", "fixed", "top-0");
       }
 
-      if (current > lastScroll.current && current > 80) {
+      if (current > lastScroll.current && current > 80 && !mobileOpen) {
         header.style.transform = "translateY(-100%)";
       } else {
         header.style.transform = "translateY(0)";
@@ -34,100 +35,118 @@ export default function Header() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mobileOpen]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const navLinks = [
-    { name: "About Us", href: "/" },
-    {
-      name: "Services",
-      href: "#",
-      dropdown: [
-        { name: "Web Development", href: "/services/web-development" },
-        { name: "UI/UX Design", href: "/services/ui-ux" },
-        { name: "SEO Optimization", href: "/services/seo" },
-      ],
-    },
-    {
-      name: "Pages",
-      href: "#",
-      dropdown: [
-        { name: "Pricing", href: "/pricing" },
-        { name: "FAQ", href: "/faq" },
-        { name: "Team", href: "/team" },
-      ],
-    },
-    {
-      name: "Blog",
-      href: "#",
-      dropdown: [
-        { name: "Blog Grid", href: "/blog" },
-        { name: "Blog Details", href: "/blog/details" },
-      ],
-    },
-    { name: "Contact", href: "/contact" },
+    { name: "About", href: "/about" },
+    { name: "Modules", href: "/modules" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Contact Us", href: "/contact" },
   ];
 
   return (
     <header
       ref={headerRef}
-      /* Increased z-index to ensure it stays above Hero components */
       className="w-full relative transition-transform duration-300 z-[100] py-3"
     >
       <div className="flex items-center justify-between max-w-7xl mx-auto px-6">
-        <Image
-          src="/logo-3.svg"
-          alt="Logo"
-          width={180}
-          height={40}
-          className="w-40"
-        />
+        {/* Logo */}
+        <Link href="/" onClick={() => setMobileOpen(false)}>
+          <Image
+            src="/logo-3.svg"
+            alt="Logo"
+            width={180}
+            height={40}
+            className="w-32 sm:w-40"
+          />
+        </Link>
 
+        {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-10">
-          {/* Navigation Links commented out as requested 
-            
-            {navLinks.map((link, index) => (
-              <div key={index} className="relative group">
-                <Link
-                  href={link.href}
-                  className="flex items-center gap-1.5 font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors py-4"
-                >
-                  {link.name}
-                  {link.dropdown && (
-                    <IoChevronDown
-                      size={14}
-                      className="transition-transform duration-300 group-hover:rotate-180 opacity-70"
-                    />
-                  )}
-                </Link>
-
-                {link.dropdown && (
-                  <div className="absolute left-0 top-[90%] pt-4 opacity-0 invisible translate-y-2 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out z-[100]">
-                    <div className="flex flex-col bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 min-w-[240px] p-2 overflow-hidden">
-                      {link.dropdown.map((item, i) => (
-                        <Link
-                          key={i}
-                          href={item.href}
-                          className="group/item flex items-center justify-between px-4 py-3 rounded-xl text-gray-700 hover:text-[#013228] hover:bg-[#F9FBF8] transition-all"
-                        >
-                          <span className="font-medium">{item.name}</span>
-                          <IoIosArrowRoundForward 
-                            className="opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-[#013228]" 
-                            size={24} 
-                          />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          */}
+          {navLinks.map((link, index) => (
+            <Link
+              key={index}
+              href={link.href}
+              className="font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors py-4"
+            >
+              {link.name}
+            </Link>
+          ))}
         </nav>
 
-        <button className="flex items-center gap-2 bg-[#E3FFCD] rounded-full py-3 px-6 text-xs uppercase tracking-[0.1em] font-bold text-[#013228] hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-[#000]/10">
-          Get Started
-          <IoIosArrowRoundForward size={24} />
-        </button>
+        {/* Desktop CTA + Mobile toggle */}
+        <div className="flex items-center gap-4">
+          <Link href="/contact" className="hidden sm:block">
+            <button className="flex items-center gap-2 bg-[#E3FFCD] rounded-full py-3 px-6 text-xs uppercase tracking-[0.1em] font-bold text-[#013228] hover:scale-105 transition-transform active:scale-95 shadow-lg shadow-[#000]/10">
+              Get Started
+              <IoIosArrowRoundForward size={24} />
+            </button>
+          </Link>
+
+          {/* Hamburger button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="lg:hidden w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? (
+              <HiOutlineX size={22} />
+            ) : (
+              <HiOutlineMenuAlt3 size={22} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 bg-[#013228] z-[99] transition-all duration-500 ease-in-out lg:hidden ${mobileOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+          }`}
+        style={{ top: 0 }}
+      >
+        <div className="flex flex-col h-full pt-24 px-8 pb-8">
+          {/* Nav links */}
+          <nav className="flex-1 flex flex-col gap-2">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={`text-3xl font-bold text-white/90 hover:text-[#E3FFCD] transition-all duration-300 py-4 border-b border-white/5 ${mobileOpen
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-8 opacity-0"
+                  }`}
+                style={{ transitionDelay: `${index * 75}ms` }}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Mobile CTA */}
+          <div className="pt-6 border-t border-white/10">
+            <Link href="/contact" onClick={() => setMobileOpen(false)}>
+              <button className="w-full flex items-center justify-center gap-2 bg-[#E3FFCD] rounded-2xl py-4 px-6 text-sm uppercase tracking-[0.1em] font-bold text-[#013228] active:scale-95 transition-transform shadow-lg">
+                Get Started
+                <IoIosArrowRoundForward size={24} />
+              </button>
+            </Link>
+          </div>
+        </div>
       </div>
     </header>
   );
