@@ -78,9 +78,9 @@ const Footer = () => {
               <Image
                 src="/logo-3.svg"
                 alt="Human Systems Logo"
-                width={160}
+                width={180}
                 height={40}
-                className="h-10 w-auto object-left object-contain"
+                className="w-32 sm:w-40"
                 priority
               />
             </Link>

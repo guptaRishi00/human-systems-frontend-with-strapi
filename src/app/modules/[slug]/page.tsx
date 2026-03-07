@@ -12,8 +12,9 @@ export function generateStaticParams() {
 }
 
 // Dynamic metadata
-export function generateMetadata({ params }: { params: { slug: string } }) {
-    const module = getModuleBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const module = getModuleBySlug(slug);
     if (!module) return { title: "Module Not Found" };
 
     return {
@@ -22,12 +23,13 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
     };
 }
 
-export default function ModuleDetailPage({
+export default async function ModuleDetailPage({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }) {
-    const module = getModuleBySlug(params.slug);
+    const { slug } = await params;
+    const module = getModuleBySlug(slug);
 
     if (!module) {
         notFound();
