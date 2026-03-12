@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import {
   HiOutlineUserGroup,
@@ -13,32 +14,38 @@ export default function OurModules() {
   const modules = [
     {
       title: "Core HR & Employee Admin",
-      description: "Centralized employee profiles, contract management with versioning, automated probation alerts, and customizable onboarding & offboarding checklists.",
+      description:
+        "Centralized employee profiles, contract management with versioning, automated probation alerts, and customizable onboarding & offboarding checklists.",
       icon: <HiOutlineUserGroup size={32} />,
     },
     {
       title: "Leave & Absence Management",
-      description: "Customizable leave policies, automated accruals, multi-step approval workflows, shared team calendars, and real-time leave balance reporting.",
+      description:
+        "Customizable leave policies, automated accruals, multi-step approval workflows, shared team calendars, and real-time leave balance reporting.",
       icon: <HiOutlineCalendar size={32} />,
     },
     {
       title: "Document Management (HR Vault)",
-      description: "Secure, permission-based document repository with categorization, role-based access control, and automated expiration alerts for work permits and certifications.",
+      description:
+        "Secure, permission-based document repository with categorization, role-based access control, and automated expiration alerts for work permits and certifications.",
       icon: <HiOutlineShieldCheck size={32} />,
     },
     {
       title: "Performance Management",
-      description: "Goal setting & tracking with OKRs/KPIs, cascading goals from company to individual, performance review cycles, and self-assessment forms.",
+      description:
+        "Goal setting & tracking with OKRs/KPIs, cascading goals from company to individual, performance review cycles, and self-assessment forms.",
       icon: <HiOutlineChartBar size={32} />,
     },
     {
       title: "Payroll Management",
-      description: "Automated payroll runs with salary structure configuration, tax and deduction management, payslip generation, distribution, and compliance reporting.",
+      description:
+        "Automated payroll runs with salary structure configuration, tax and deduction management, payslip generation, distribution, and compliance reporting.",
       icon: <HiOutlineCurrencyDollar size={32} />,
     },
     {
       title: "Expense Management",
-      description: "Streamlined expense claim submission with digital receipt upload, customizable expense categories, and multi-level approval workflows with analytics.",
+      description:
+        "Streamlined expense claim submission with digital receipt upload, customizable expense categories, and multi-level approval workflows with analytics.",
       icon: <HiOutlineClipboardList size={32} />,
     },
   ];
@@ -57,7 +64,9 @@ export default function OurModules() {
             Comprehensive HR Modules
           </h2>
           <p className="max-w-2xl text-gray-500 text-lg leading-relaxed">
-            Human Systems provides a complete suite of HR modules built with multi-tenant architecture, robust security, and role-based access controls.
+            Human Systems provides a complete suite of HR modules built with
+            multi-tenant architecture, robust security, and role-based access
+            controls.
           </p>
         </div>
 
@@ -87,19 +96,21 @@ export default function OurModules() {
               </p>
 
               {/* The "Read More" Full Button Transformation */}
-              <div
-                className="w-fit inline-flex items-center gap-3 px-0 py-2 rounded-full transition-all duration-500 ease-in-out
+              <Link href={"/modules"}>
+                <div
+                  className="w-fit inline-flex items-center gap-3 px-0 py-2 rounded-full transition-all duration-500 ease-in-out
                                group-hover:bg-[#013228] group-hover:px-6 group-hover:py-3"
-              >
-                <span className="text-sm font-bold uppercase tracking-wider text-gray-900 group-hover:text-white transition-colors duration-500">
-                  Read More
-                </span>
+                >
+                  <span className="text-sm font-bold uppercase tracking-wider text-gray-900 group-hover:text-white transition-colors duration-500">
+                    Read More
+                  </span>
 
-                <HiOutlineArrowNarrowRight
-                  size={20}
-                  className="text-gray-900 group-hover:text-white transition-all duration-500 group-hover:translate-x-1"
-                />
-              </div>
+                  <HiOutlineArrowNarrowRight
+                    size={20}
+                    className="text-gray-900 group-hover:text-white transition-all duration-500 group-hover:translate-x-1"
+                  />
+                </div>
+              </Link>
             </div>
           ))}
         </div>

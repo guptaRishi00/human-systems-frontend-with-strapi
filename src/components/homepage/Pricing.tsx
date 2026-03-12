@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
@@ -124,16 +125,18 @@ export default function Pricing({ pricingData }: any) {
                 </ul>
               </div>
 
-              <button
-                className={`w-full group py-4 px-6 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all ${
-                  plan.highlight
-                    ? "bg-[#d1e5c4] text-[#04231d] hover:bg-white"
-                    : "bg-transparent text-white border border-emerald-700 hover:bg-[#d1e5c4] hover:text-[#04231d] cursor-pointer"
-                }`}
-              >
-                GET STARTED
-                <HiOutlineArrowNarrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
-              </button>
+              <Link href="/contact">
+                <button
+                  className={`w-full group py-4 px-6 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all ${
+                    plan.highlight
+                      ? "bg-[#d1e5c4] text-[#04231d] hover:bg-white"
+                      : "bg-transparent text-white border border-emerald-700 hover:bg-[#d1e5c4] hover:text-[#04231d] cursor-pointer"
+                  }`}
+                >
+                  GET STARTED
+                  <HiOutlineArrowNarrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
             </div>
           ))}
         </div>

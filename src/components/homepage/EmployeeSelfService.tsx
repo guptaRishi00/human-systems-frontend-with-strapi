@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { HiOutlineArrowNarrowRight, HiCheckCircle } from "react-icons/hi";
 
@@ -22,7 +23,9 @@ export default function EmployeeSelfService() {
                 <span className="text-[#013228]">in one place.</span>
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed max-w-xl">
-                Streamline your HR workflow. Give employees the autonomy to manage their documentation, view benefits, and stay connected with the entire team—zero admin intervention required.
+                Streamline your HR workflow. Give employees the autonomy to
+                manage their documentation, view benefits, and stay connected
+                with the entire team—zero admin intervention required.
               </p>
             </div>
 
@@ -39,7 +42,8 @@ export default function EmployeeSelfService() {
                   Unified Profile & Payslips
                 </h3>
                 <p className="text-gray-500 leading-relaxed">
-                  A secure vault for all personal documents. Employees can instantly download tax forms and payslip history.
+                  A secure vault for all personal documents. Employees can
+                  instantly download tax forms and payslip history.
                 </p>
               </div>
 
@@ -49,16 +53,19 @@ export default function EmployeeSelfService() {
                   Interactive Org Directory
                 </h3>
                 <p className="text-gray-500 leading-relaxed">
-                  Visualize your entire team structure. Search by department, role, or name to find exactly who you're looking for.
+                  Visualize your entire team structure. Search by department,
+                  role, or name to find exactly who you're looking for.
                 </p>
               </div>
             </div>
 
             <div className="mt-12">
-              <button className="group flex items-center gap-3 border border-[#013228] text-gray-900 px-8 py-4 rounded-full hover:bg-[#013228] cursor-pointer hover:text-white font-bold transition-all">
-                Start Empowering Your Team
-                <HiOutlineArrowNarrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
-              </button>
+              <Link href={"/contact"}>
+                <button className="group flex items-center gap-3 border border-[#013228] text-gray-900 px-8 py-4 rounded-full hover:bg-[#013228] cursor-pointer hover:text-white font-bold transition-all">
+                  Start Empowering Your Team
+                  <HiOutlineArrowNarrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -66,10 +73,8 @@ export default function EmployeeSelfService() {
           <div className="relative">
             {/* Soft decorative background glow */}
 
-
             <div className="relative rounded-t-4xl border border-gray-200 overflow-hidden bg-white">
               {/* Minimal Browser Header Decoration */}
-
 
               {/* Image Container - Using aspect ratio instead of h-screen */}
               <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] w-full">
