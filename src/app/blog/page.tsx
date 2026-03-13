@@ -64,13 +64,20 @@ export default function BlogListingPage() {
         {/* Featured Post */}
         {featuredBlog && (
           <div className="mb-32">
-            <div className="group relative border border-[#013228] rounded-[40px] overflow-hidden bg-white transition-all ">
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                <div className="lg:col-span-7 aspect-video lg:aspect-auto border-b-2 lg:border-b-0 lg:border-r border-[#013228]">
+            {/* 1. Converted outer div to a Link so the whole card is clickable */}
+            {/* 2. Set default border to gray-200/300 and added hover:border-[#013228] */}
+            <Link
+              href={`/blog/${featuredBlog.slug}`}
+              className="block group relative border border-gray-500 hover:border-[#013228] rounded-[40px] overflow-hidden bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-12 h-full">
+                {/* Added group-hover to inner border so the divider matches on hover */}
+                <div className="lg:col-span-7 aspect-video lg:aspect-auto border-b lg:border-b-0 lg:border-r border-gray-200 group-hover:border-[#013228] transition-colors duration-300 overflow-hidden">
                   <img
                     src={featuredBlog.coverImage}
                     alt={featuredBlog.title}
-                    className="w-full h-full object-cover"
+                    // Added a subtle scale effect to the image on hover
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
                 <div className="lg:col-span-5 p-8 md:p-12 flex flex-col justify-center">
@@ -88,15 +95,14 @@ export default function BlogListingPage() {
                   <p className="text-gray-600 mb-10 leading-relaxed line-clamp-4">
                     {featuredBlog.excerpt}
                   </p>
-                  <Link
-                    href={`/blog/${featuredBlog.slug}`}
-                    className="inline-flex items-center justify-center gap-3 bg-[#013228] text-[#E3FFCD] px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:scale-[1.02] transition-all"
-                  >
+
+                  {/* 3. Changed from <Link> to <div> to prevent nested link errors */}
+                  <div className="inline-flex w-max items-center justify-center gap-3 bg-[#013228] text-[#E3FFCD] px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest group-hover:scale-[1.02] group-hover:bg-[#024a3c] transition-all">
                     Read Article <ChevronRight size={18} />
-                  </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         )}
 

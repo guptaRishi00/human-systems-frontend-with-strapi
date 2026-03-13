@@ -61,8 +61,8 @@ export default function Header() {
       dropdown: [
         { name: "HR Toolkit", href: "/resources/hr-toolkit" },
         { name: "Use Cases", href: "/resources/use-cases" },
-        { name: "Compliance", href: "/resources/compliance" }
-      ]
+        { name: "Compliance", href: "/resources/compliance" },
+      ],
     },
     { name: "Contact Us", href: "/contact" },
   ];
@@ -72,7 +72,10 @@ export default function Header() {
       ref={headerRef}
       className="w-full relative transition-transform duration-300 z-[100] py-3"
     >
-      <div className="flex items-center justify-between max-w-7xl mx-auto px-6">
+      {/* FIX: Added relative and z-[101] to this inner container. 
+        This ensures your logo and hamburger button stay ABOVE the fixed mobile menu overlay.
+      */}
+      <div className="relative z-[101] flex items-center justify-between max-w-7xl mx-auto px-6">
         {/* Logo */}
         <Link href="/" onClick={() => setMobileOpen(false)}>
           <Image
@@ -86,12 +89,15 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-10">
-          {navLinks.map((link, index) => (
+          {navLinks.map((link, index) =>
             link.dropdown ? (
               <div key={index} className="relative group py-4">
                 <button className="flex items-center gap-1 font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors cursor-pointer">
                   {link.name}
-                  <IoIosArrowDown size={16} className="transition-transform duration-300 group-hover:rotate-180" />
+                  <IoIosArrowDown
+                    size={16}
+                    className="transition-transform duration-300 group-hover:rotate-180"
+                  />
                 </button>
                 <div className="absolute top-12 left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0 overflow-hidden">
                   <div className="py-2 flex flex-col">
@@ -115,8 +121,8 @@ export default function Header() {
               >
                 {link.name}
               </Link>
-            )
-          ))}
+            ),
+          )}
         </nav>
 
         {/* Desktop CTA + Mobile toggle */}
@@ -134,7 +140,7 @@ export default function Header() {
           {/* Hamburger button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            className="lg:hidden w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileOpen ? (
@@ -148,24 +154,28 @@ export default function Header() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-[#013228] z-[99] transition-all duration-500 ease-in-out lg:hidden ${mobileOpen
-          ? "opacity-100 visible"
-          : "opacity-0 invisible pointer-events-none"
-          }`}
-        style={{ top: 0 }}
+        className={`fixed inset-0 bg-[#013228] z-[99] transition-all duration-500 ease-in-out lg:hidden ${
+          mobileOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
       >
         <div className="flex flex-col h-full pt-24 px-8 pb-8">
           {/* Nav links */}
           <nav className="flex-1 flex flex-col gap-2 overflow-y-auto">
-            {navLinks.map((link, index) => (
+            {navLinks.map((link, index) =>
               link.dropdown ? (
-                <div key={index} className="flex flex-col border-b border-white/5 py-4">
+                <div
+                  key={index}
+                  className="flex flex-col border-b border-white/5 py-4"
+                >
                   <button
                     onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
-                    className={`flex items-center justify-between text-3xl font-bold text-white/90 hover:text-[#E3FFCD] transition-all duration-300 w-full text-left ${mobileOpen
-                      ? "translate-x-0 opacity-100"
-                      : "-translate-x-8 opacity-0"
-                      }`}
+                    className={`flex items-center justify-between w-full text-left text-3xl font-bold text-white/90 hover:text-[#E3FFCD] transition-all duration-300 ${
+                      mobileOpen
+                        ? "translate-x-0 opacity-100"
+                        : "-translate-x-8 opacity-0"
+                    }`}
                     style={{ transitionDelay: `${index * 75}ms` }}
                   >
                     <span>{link.name}</span>
@@ -175,8 +185,11 @@ export default function Header() {
                     />
                   </button>
                   <div
-                    className={`flex flex-col pl-4 overflow-hidden transition-all duration-300 ${mobileDropdownOpen ? "max-h-[200px] mt-4 opacity-100" : "max-h-0 opacity-0"
-                      }`}
+                    className={`flex flex-col pl-4 overflow-hidden transition-all duration-300 ${
+                      mobileDropdownOpen
+                        ? "max-h-[200px] mt-4 opacity-100"
+                        : "max-h-0 opacity-0"
+                    }`}
                   >
                     {link.dropdown.map((sublink, i) => (
                       <Link
@@ -186,11 +199,14 @@ export default function Header() {
                           setMobileOpen(false);
                           setMobileDropdownOpen(false);
                         }}
-                        className={`text-xl font-medium text-white/70 hover:text-[#E3FFCD] py-2 transition-colors ${mobileOpen
-                          ? "translate-x-0 opacity-100"
-                          : "-translate-x-4 opacity-0"
-                          }`}
-                        style={{ transitionDelay: `${index * 75 + (i + 1) * 75}ms` }}
+                        className={`text-xl font-medium text-white/70 hover:text-[#E3FFCD] py-2 transition-colors ${
+                          mobileOpen
+                            ? "translate-x-0 opacity-100"
+                            : "-translate-x-4 opacity-0"
+                        }`}
+                        style={{
+                          transitionDelay: `${index * 75 + (i + 1) * 75}ms`,
+                        }}
                       >
                         {sublink.name}
                       </Link>
@@ -202,22 +218,23 @@ export default function Header() {
                   key={index}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`text-3xl font-bold text-white/90 hover:text-[#E3FFCD] transition-all duration-300 py-4 border-b border-white/5 ${mobileOpen
-                    ? "translate-x-0 opacity-100"
-                    : "-translate-x-8 opacity-0"
-                    }`}
+                  className={`text-3xl font-bold text-white/90 hover:text-[#E3FFCD] transition-all duration-300 py-4 border-b border-white/5 ${
+                    mobileOpen
+                      ? "translate-x-0 opacity-100"
+                      : "-translate-x-8 opacity-0"
+                  }`}
                   style={{ transitionDelay: `${index * 75}ms` }}
                 >
                   {link.name}
                 </Link>
-              )
-            ))}
+              ),
+            )}
           </nav>
 
           {/* Mobile CTA */}
           <div className="pt-6 border-t border-white/10">
             <Link href="/contact" onClick={() => setMobileOpen(false)}>
-              <button className="group w-full flex items-center justify-center gap-2 bg-white rounded-2xl py-4 px-6 text-sm uppercase tracking-[0.1em] font-bold text-[#013228] hover:bg-[#013228] hover:text-[#E3FFCD] transition-all duration-300">
+              <button className="group w-full flex items-center justify-center gap-2 bg-white rounded-2xl py-4 px-6 text-sm uppercase tracking-[0.1em] font-bold text-[#013228] hover:bg-[#013228] hover:text-[#E3FFCD] transition-all duration-300 border border-transparent hover:border-[#E3FFCD]">
                 Get Started
                 <IoIosArrowRoundForward
                   size={24}
