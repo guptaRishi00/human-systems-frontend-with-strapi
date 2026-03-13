@@ -7,28 +7,22 @@ import { IoIosArrowRoundForward, IoIosArrowDown } from "react-icons/io";
 import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 
 export default function Header() {
-  const headerRef = useRef<HTMLElement | null>(null);
   const lastScroll = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
-
     const handleScroll = () => {
       const current = window.scrollY;
 
-      if (current > 50) {
-        header.classList.add("bg-[#013228]", "shadow-md", "fixed", "top-0");
-      } else {
-        header.classList.remove("bg-[#013228]", "shadow-md", "fixed", "top-0");
-      }
+      setIsScrolled(current > 50);
 
       if (current > lastScroll.current && current > 80 && !mobileOpen) {
-        header.style.transform = "translateY(-100%)";
+        setIsHidden(true);
       } else {
-        header.style.transform = "translateY(0)";
+        setIsHidden(false);
       }
 
       lastScroll.current = current;
@@ -38,7 +32,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [mobileOpen]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -68,89 +61,90 @@ export default function Header() {
   ];
 
   return (
-    <header
-      ref={headerRef}
-      className="w-full relative transition-transform duration-300 z-[100] py-3"
-    >
-      {/* FIX: Added relative and z-[101] to this inner container. 
-        This ensures your logo and hamburger button stay ABOVE the fixed mobile menu overlay.
-      */}
-      <div className="relative z-[101] flex items-center justify-between max-w-7xl mx-auto px-6">
-        {/* Logo */}
-        <Link href="/" onClick={() => setMobileOpen(false)}>
-          <Image
-            src="/logo-3.svg"
-            alt="Logo"
-            width={180}
-            height={40}
-            className="w-32 sm:w-40"
-          />
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-10">
-          {navLinks.map((link, index) =>
-            link.dropdown ? (
-              <div key={index} className="relative group py-4">
-                <button className="flex items-center gap-1 font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors cursor-pointer">
-                  {link.name}
-                  <IoIosArrowDown
-                    size={16}
-                    className="transition-transform duration-300 group-hover:rotate-180"
-                  />
-                </button>
-                <div className="absolute top-12 left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0 overflow-hidden">
-                  <div className="py-2 flex flex-col">
-                    {link.dropdown.map((sublink, i) => (
-                      <Link
-                        key={i}
-                        href={sublink.href}
-                        className="px-4 py-3 text-sm font-medium text-[#013228] hover:bg-gray-50 hover:text-[#013228] transition-colors"
-                      >
-                        {sublink.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <Link
-                key={index}
-                href={link.href}
-                className="font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors py-4"
-              >
-                {link.name}
-              </Link>
-            ),
-          )}
-        </nav>
-
-        {/* Desktop CTA + Mobile toggle */}
-        <div className="flex items-center gap-4">
-          <Link href="/contact" className="hidden sm:block">
-            <button className="flex items-center gap-2 bg-white rounded-full py-3 px-6 text-xs uppercase tracking-[0.1em] font-bold text-[#013228] cursor-pointer hover:bg-[#d4ffb8] transition-colors group">
-              Get Started
-              <IoIosArrowRoundForward
-                size={24}
-                className="transition-transform duration-300 group-hover:translate-x-2"
-              />
-            </button>
+    <>
+      <header
+        // FIX: Reverted 'absolute top-0' back to 'relative' so it stays in flow!
+        className={`w-full transition-transform duration-300 z-[100] py-3 ${
+          isScrolled ? "bg-[#013228] shadow-md fixed top-0" : "relative"
+        } ${isHidden ? "-translate-y-full" : "translate-y-0"}`}
+      >
+        <div className="relative z-[101] flex items-center justify-between max-w-7xl mx-auto px-6">
+          {/* Logo */}
+          <Link href="/" onClick={() => setMobileOpen(false)}>
+            <Image
+              src="/logo-3.svg"
+              alt="Logo"
+              width={180}
+              height={40}
+              className="w-32 sm:w-40"
+            />
           </Link>
 
-          {/* Hamburger button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? (
-              <HiOutlineX size={22} />
-            ) : (
-              <HiOutlineMenuAlt3 size={22} />
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-10">
+            {navLinks.map((link, index) =>
+              link.dropdown ? (
+                <div key={index} className="relative group py-4">
+                  <button className="flex items-center gap-1 font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors cursor-pointer">
+                    {link.name}
+                    <IoIosArrowDown
+                      size={16}
+                      className="transition-transform duration-300 group-hover:rotate-180"
+                    />
+                  </button>
+                  <div className="absolute top-12 left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0 overflow-hidden">
+                    <div className="py-2 flex flex-col">
+                      {link.dropdown.map((sublink, i) => (
+                        <Link
+                          key={i}
+                          href={sublink.href}
+                          className="px-4 py-3 text-sm font-medium text-[#013228] hover:bg-gray-50 hover:text-[#013228] transition-colors"
+                        >
+                          {sublink.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={index}
+                  href={link.href}
+                  className="font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors py-4"
+                >
+                  {link.name}
+                </Link>
+              ),
             )}
-          </button>
+          </nav>
+
+          {/* Desktop CTA + Mobile toggle */}
+          <div className="flex items-center gap-4">
+            <Link href="/contact" className="hidden sm:block">
+              <button className="flex items-center gap-2 bg-white rounded-full py-3 px-6 text-xs uppercase tracking-[0.1em] font-bold text-[#013228] cursor-pointer hover:bg-[#d4ffb8] transition-colors group">
+                Get Started
+                <IoIosArrowRoundForward
+                  size={24}
+                  className="transition-transform duration-300 group-hover:translate-x-2"
+                />
+              </button>
+            </Link>
+
+            {/* Hamburger button */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors cursor-pointer"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? (
+                <HiOutlineX size={22} />
+              ) : (
+                <HiOutlineMenuAlt3 size={22} />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Menu Overlay */}
       <div
@@ -161,7 +155,6 @@ export default function Header() {
         }`}
       >
         <div className="flex flex-col h-full pt-24 px-8 pb-8">
-          {/* Nav links */}
           <nav className="flex-1 flex flex-col gap-2 overflow-y-auto">
             {navLinks.map((link, index) =>
               link.dropdown ? (
@@ -181,7 +174,9 @@ export default function Header() {
                     <span>{link.name}</span>
                     <IoIosArrowDown
                       size={24}
-                      className={`transition-transform duration-300 ${mobileDropdownOpen ? "rotate-180 text-[#E3FFCD]" : ""}`}
+                      className={`transition-transform duration-300 ${
+                        mobileDropdownOpen ? "rotate-180 text-[#E3FFCD]" : ""
+                      }`}
                     />
                   </button>
                   <div
@@ -231,7 +226,6 @@ export default function Header() {
             )}
           </nav>
 
-          {/* Mobile CTA */}
           <div className="pt-6 border-t border-white/10">
             <Link href="/contact" onClick={() => setMobileOpen(false)}>
               <button className="group w-full flex items-center justify-center gap-2 bg-white rounded-2xl py-4 px-6 text-sm uppercase tracking-[0.1em] font-bold text-[#013228] hover:bg-[#013228] hover:text-[#E3FFCD] transition-all duration-300 border border-transparent hover:border-[#E3FFCD]">
@@ -245,6 +239,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 }
