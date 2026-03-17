@@ -32,7 +32,7 @@ export default function HeroSection() {
                 Request a Demo
                 <IoIosArrowRoundForward
                   size={30}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="transition-transform duration-300 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180"
                 />
               </button>
             </Link>
@@ -42,7 +42,7 @@ export default function HeroSection() {
                 Learn More
                 <IoIosArrowRoundForward
                   size={30}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="transition-transform duration-300 ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1 rtl:rotate-180"
                 />
               </button>
             </Link>
@@ -51,13 +51,13 @@ export default function HeroSection() {
       </div>
 
       {/* Right Image - hidden below lg */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block translate-x-10 rounded-l-2xl overflow-hidden">
+      <div className="absolute ltr:right-0 rtl:left-0 top-1/2 -translate-y-1/2 hidden lg:block ltr:translate-x-10 rtl:-translate-x-10 ltr:rounded-l-2xl rtl:rounded-r-2xl overflow-hidden">
         <Image
           src="/image3.png"
           alt="Hero Illustration"
           width={500}
           height={500}
-          className="w-185 h-auto object-contain"
+          className="w-[30rem] xl:w-[46rem] h-auto object-contain"
           priority
         />
       </div>

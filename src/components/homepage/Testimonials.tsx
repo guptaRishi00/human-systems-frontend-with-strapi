@@ -50,7 +50,18 @@ export default function InfiniteTestimonials() {
   const [currentIndex, setCurrentIndex] = useState(testimonials.length);
   const [visibleCards, setVisibleCards] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
+  const [isRTL, setIsRTL] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(true);
+
+  useEffect(() => {
+    const checkRTL = () => {
+      setIsRTL(document.documentElement.dir === "rtl");
+    };
+    checkRTL();
+    const observer = new MutationObserver(checkRTL);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["dir"] });
+    return () => observer.disconnect();
+  }, []);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -120,10 +131,10 @@ export default function InfiniteTestimonials() {
 
           <div className="flex items-center bg-white rounded-full p-1 border border-gray-100 shadow-sm">
             <button onClick={prevStep} className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90">
-              <HiOutlineArrowLeft size={20} />
+              {isRTL ? <HiOutlineArrowRight size={20} /> : <HiOutlineArrowLeft size={20} />}
             </button>
             <button onClick={nextStep} className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90">
-              <HiOutlineArrowRight size={20} />
+              {isRTL ? <HiOutlineArrowLeft size={20} /> : <HiOutlineArrowRight size={20} />}
             </button>
           </div>
         </div>
@@ -136,7 +147,7 @@ export default function InfiniteTestimonials() {
           <motion.div
             className="flex"
             initial={false}
-            animate={{ x: `-${currentIndex * (100 / visibleCards)}%` }}
+            animate={{ x: `${isRTL ? "" : "-"}${currentIndex * (100 / visibleCards)}%` }}
             onAnimationComplete={handleUpdate}
             transition={
               isTransitioning
