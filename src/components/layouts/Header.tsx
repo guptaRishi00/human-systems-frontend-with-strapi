@@ -103,7 +103,7 @@ export default function Header() {
                       className="transition-transform duration-300 group-hover:rotate-180"
                     />
                   </button>
-                  <div className="absolute top-12 left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left translate-y-2 group-hover:translate-y-0 overflow-hidden">
+                  <div className="absolute top-12 ltr:left-0 rtl:right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform ltr:origin-top-left rtl:origin-top-right translate-y-2 group-hover:translate-y-0 overflow-hidden">
                     <div className="py-2 flex flex-col">
                       {link.dropdown.map((sublink, i) => (
                         <Link
@@ -137,7 +137,7 @@ export default function Header() {
                 Get Started
                 <IoIosArrowRoundForward
                   size={24}
-                  className="transition-transform duration-300 group-hover:translate-x-2"
+                  className="transition-transform duration-300 ltr:group-hover:translate-x-2 rtl:group-hover:-translate-x-2 rtl:-scale-x-100"
                 />
               </button>
             </Link>
@@ -244,7 +244,7 @@ export default function Header() {
                 Get Started
                 <IoIosArrowRoundForward
                   size={24}
-                  className="transition-transform duration-300 group-hover:translate-x-2"
+                  className="transition-transform duration-300 ltr:group-hover:translate-x-2 rtl:group-hover:-translate-x-2 rtl:-scale-x-100"
                 />
               </button>
             </Link>

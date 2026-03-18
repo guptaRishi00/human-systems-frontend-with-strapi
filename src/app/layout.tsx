@@ -3,6 +3,7 @@ import { Sora, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/homepage/Footer";
+import { cookies } from "next/headers";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -23,13 +24,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const googtrans = cookieStore.get("googtrans")?.value;
+  const lang = googtrans?.split("/").pop() || "en";
+  const dir = lang === "ar" ? "rtl" : "ltr";
+
   return (
-    <html lang="en" className={`${sora.variable} ${dmSans.variable}`}>
+    <html lang={lang} dir={dir} className={`${sora.variable} ${dmSans.variable}`}>
       <body className="antialiased">
         <Header />
         {children}
