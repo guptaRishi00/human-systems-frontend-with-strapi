@@ -46,11 +46,18 @@ body {
 #goog-gt-tt img,
 .goog-te-spinner-pos,
 .goog-te-spinner,
+.goog-te-spinner-pos *,
 .goog-te-spinner *,
 .goog-te-gadget-simple,
 #google_translate_element img,
-.skiptranslate.goog-te-gadget > div {
+.skiptranslate.goog-te-gadget > div,
+div[class*="goog-te-spinner"] {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
 .goog-te-gadget {

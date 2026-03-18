@@ -44,13 +44,18 @@ const LanguageSwitcher = () => {
       }
     };
 
-    // MutationObserver to remove the bar as soon as it's added
+    // MutationObserver to remove the bar and spinner as soon as they're added
     const observer = new MutationObserver(() => {
       const bar = document.querySelector(".goog-te-banner-frame") as HTMLElement;
       if (bar) {
         bar.style.display = "none";
         bar.style.visibility = "hidden";
       }
+      
+      // Actively remove the spinner and banners if they appear
+      const elementsToRemove = document.querySelectorAll('.goog-te-spinner-pos, [class*="goog-te-spinner"], .goog-te-banner-frame, #goog-gt-tt');
+      elementsToRemove.forEach(el => el.remove());
+
       if (document.body.style.top !== "0px") {
         document.body.style.top = "0px";
       }
