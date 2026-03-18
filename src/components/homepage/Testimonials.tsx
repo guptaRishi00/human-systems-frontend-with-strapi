@@ -58,13 +58,7 @@ export default function InfiniteTestimonials() {
       company: "Creative Pulse",
       content: "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
     },
-     {
-      img: "https://media.licdn.com/dms/image/v2/C4E03AQFTO3FFKbrYWA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516857773658?e=1775692800&v=beta&t=bFRdO7hWewhoNDkVgtJAbt-WdWh_jpRJKEfQmLqGI60",
-      role: "Dirigeante chez Excellentia Formation ",
-      name: " Leila Mely",
-      company: "Creative Pulse",
-      content: "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
-    },
+  
   ];
 
   // Triple the array to ensure we always have content to show during the jump
