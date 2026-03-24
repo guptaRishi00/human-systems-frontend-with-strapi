@@ -14,12 +14,12 @@ const TeamSection = () => {
     },
     {
       name: "Pascal Aumont",
-      role: "Customer Success",
+      role: "Global Account Manager",
       img: "/three.png",
     },
     {
       name: "Morane MANUBIN",
-      role: "CTO",
+      role: "Customer Success",
       img: "/four.png",
     },
   ];
@@ -47,12 +47,12 @@ const TeamSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {team.map((member, i) => (
-            <div key={i} className="group cursor-pointer">
+            <div key={i} className="group cursor-pointer ">
               <div className="relative aspect-square rounded-[32px] overflow-hidden mb-6 bg-gray-100">
                 <img
                   src={member.img}
                   alt={member.name}
-                  className="w-full h-full object-cover grayscale-0 group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover lg:h-90 grayscale-0 group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                 />
               </div>
               <h4 className="text-xl font-bold text-gray-900">{member.name}</h4>
