@@ -20,53 +20,57 @@ export default function InfiniteTestimonials() {
       role: "Directrice chez Esprit Famille",
       name: "Leila Mely",
       company: "Esprit Famille",
-      content: "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
+      content:
+        "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
     },
-     {
+    {
       img: "https://media.licdn.com/dms/image/v2/D4D03AQGKXDSiuNsfWA/profile-displayphoto-scale_400_400/B4DZpqVpfKIkAk-/0/1762720653795?e=1775692800&v=beta&t=8ulxiyfGsvlmAcdcc9MdupfS5QkThayYRXf6Oswk_08",
-      role: "Directeur commercial chez",
+      role: "Directeur commercial",
       name: "Jean Paul DZIME BIBANG",
       company: "ONEDISTRIB partenaire Alliance des énergies",
-      content: "The employee self-service portal has dramatically reduced our HR team's workload. Highly recommended.",
+      content:
+        "The employee self-service portal has dramatically reduced our HR team's workload. Highly recommended.",
     },
-     {
+    {
       img: "https://media.licdn.com/dms/image/v2/C4E03AQFTO3FFKbrYWA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1516857773658?e=1775692800&v=beta&t=bFRdO7hWewhoNDkVgtJAbt-WdWh_jpRJKEfQmLqGI60",
-      role: "Dirigeante chez Excellentia Formation ",
-      name: " Essi AYIVOR",
+      role: "Dirigeante chez Excellentia Formation",
+      name: "Essi AYIVOR",
       company: "Creative Pulse",
-      content: "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
+      content:
+        "Tracking employee development and training milestones is effortless now. The reporting features give us exactly the insights we need to grow.",
     },
-     {
+    {
       img: "https://media.licdn.com/dms/image/v2/D4E03AQHB58_fRta2uw/profile-displayphoto-shrink_400_400/B4EZkLvnzvIsAk-/0/1756838657783?e=1775692800&v=beta&t=Jz-i9obYGww8nHTriWkxkK-7d0BhgGD_oarVTTlvn5c",
-      role: "chef d’entreprise",
+      role: "Chef d’entreprise",
       name: "Dominique SARR EXAPAYE",
       company: "EXAPAYE",
-      content: "The interface is so intuitive that our employees didn't even need training. Best HR software we've used.",
+      content:
+        "As a business owner, compliance and payroll accuracy are my top priorities. This platform integrates flawlessly and gives me complete peace of mind.",
     },
     {
       img: "https://media.licdn.com/dms/image/v2/D4E03AQG4hOK0_aNyjQ/profile-displayphoto-shrink_400_400/B4EZRzewgrGgAk-/0/1737104231875?e=1775692800&v=beta&t=mtkkApQ-bbmYHJhBu935_ih8GLGNuoyrJHjCFE_lrx0",
       role: "Présidente fondatrice de l'IDRECOM",
       name: "Narcise THÉRÈSE",
       company: "IDRECOM",
-      content: "Human Systems has completely transformed how we manage our HR operations. The leave management is seamless.",
+      content:
+        "Human Systems has completely transformed how we manage our HR operations. The leave management is seamless.",
     },
-   
     {
       img: "https://media.licdn.com/dms/image/v2/C4D03AQEf8BRCvOlg_g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1544133046397?e=1775692800&v=beta&t=cGduHRo9PnDv7NV5gPDDacMjwoPHIwgS72l_JES0mQ8",
       role: "Responsable Travaux Comptable et Fiscale",
       name: "Kévin M",
-      company: "LA BOUSSOLE ",
-      content: "Payroll automation used to be a nightmare. Now it's a single click. A game changer for our finance team.",
+      company: "LA BOUSSOLE",
+      content:
+        "Payroll automation used to be a nightmare. Now it's a single click. A game changer for our finance team.",
     },
-   
-    
-     
-    
-  
   ];
 
   // Triple the array to ensure we always have content to show during the jump
-  const extendedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  const extendedTestimonials = [
+    ...testimonials,
+    ...testimonials,
+    ...testimonials,
+  ];
   const [currentIndex, setCurrentIndex] = useState(testimonials.length);
   const [visibleCards, setVisibleCards] = useState(3);
   const [isPaused, setIsPaused] = useState(false);
@@ -79,7 +83,10 @@ export default function InfiniteTestimonials() {
     };
     checkRTL();
     const observer = new MutationObserver(checkRTL);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["dir"] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["dir"],
+    });
     return () => observer.disconnect();
   }, []);
 
@@ -145,16 +152,34 @@ export default function InfiniteTestimonials() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-4xl font-bold text-[#013228]">What our clients say</h2>
-            <p className="text-gray-500 mt-2">Trusted by leading HR teams worldwide.</p>
+            <h2 className="text-4xl font-bold text-[#013228]">
+              What our clients say
+            </h2>
+            <p className="text-gray-500 mt-2">
+              Trusted by leading HR teams worldwide.
+            </p>
           </div>
 
           <div className="flex items-center bg-white rounded-full p-1 border border-gray-100 shadow-sm">
-            <button onClick={prevStep} className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90">
-              {isRTL ? <HiOutlineArrowRight size={20} /> : <HiOutlineArrowLeft size={20} />}
+            <button
+              onClick={prevStep}
+              className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90"
+            >
+              {isRTL ? (
+                <HiOutlineArrowRight size={20} />
+              ) : (
+                <HiOutlineArrowLeft size={20} />
+              )}
             </button>
-            <button onClick={nextStep} className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90">
-              {isRTL ? <HiOutlineArrowLeft size={20} /> : <HiOutlineArrowRight size={20} />}
+            <button
+              onClick={nextStep}
+              className="p-3 rounded-full hover:bg-gray-50 text-gray-500 transition-all active:scale-90"
+            >
+              {isRTL ? (
+                <HiOutlineArrowLeft size={20} />
+              ) : (
+                <HiOutlineArrowRight size={20} />
+              )}
             </button>
           </div>
         </div>
@@ -167,7 +192,9 @@ export default function InfiniteTestimonials() {
           <motion.div
             className="flex"
             initial={false}
-            animate={{ x: `${isRTL ? "" : "-"}${currentIndex * (100 / visibleCards)}%` }}
+            animate={{
+              x: `${isRTL ? "" : "-"}${currentIndex * (100 / visibleCards)}%`,
+            }}
             onAnimationComplete={handleUpdate}
             transition={
               isTransitioning
@@ -198,7 +225,8 @@ export default function InfiniteTestimonials() {
                   <div className="pt-6 border-t border-gray-100">
                     <h4 className="font-bold text-[#013228]">{item.name}</h4>
                     <p className="text-sm text-gray-500 font-medium">
-                      {item.role} <span className="text-gray-300 mx-1">|</span> {item.company}
+                      {item.role} <span className="text-gray-300 mx-1">|</span>{" "}
+                      {item.company}
                     </p>
                   </div>
                 </div>

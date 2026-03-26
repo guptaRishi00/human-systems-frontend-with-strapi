@@ -15,7 +15,7 @@ const TeamSection = () => {
     {
       name: "Pascal Aumont",
       role: "Global Account Manager",
-      img: "/three.png",
+      img: "/seven.jpeg",
     },
     {
       name: "Morane MANUBIN",
