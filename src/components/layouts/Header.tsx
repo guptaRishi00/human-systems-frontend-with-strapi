@@ -6,8 +6,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowRoundForward, IoIosArrowDown } from "react-icons/io";
 import { HiOutlineMenuAlt3, HiOutlineX } from "react-icons/hi";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { getStrapiURL } from "@/utils/get-strapi-url";
 
-export default function Header() {
+export default function Header({ data }: { data?: any }) {
   const lastScroll = useRef(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
@@ -54,7 +55,7 @@ export default function Header() {
     };
   }, [mobileOpen]);
 
-  const navLinks = [
+  const defaultNavLinks = [
     { name: "About", href: "/about" },
     { name: "Modules", href: "/modules" },
     { name: "Pricing", href: "/pricing" },
@@ -71,6 +72,24 @@ export default function Header() {
     { name: "Contact Us", href: "/contact" },
   ];
 
+  const { logo, navigation, cta } = data || {};
+
+  const displayNavLinks = navigation && navigation.length > 0
+    ? navigation.map((navItem: any) => ({
+        name: navItem.name || navItem.text,
+        href: navItem.href === null ? "#" : `/${navItem.href || ""}`,
+        dropdown: navItem.sub_links && navItem.sub_links.length > 0
+          ? navItem.sub_links.map((sub: any) => ({
+              name: sub.text || sub.name,
+              href: `/${sub.href || ""}`
+            }))
+          : null
+      }))
+    : defaultNavLinks;
+
+  const logoUrl = logo?.data?.attributes?.url || logo?.url;
+  const fullLogoSrc = logoUrl ? `${getStrapiURL()}${logoUrl}` : "/logo-3.svg";
+
   return (
     <>
       <header
@@ -83,17 +102,18 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" onClick={() => setMobileOpen(false)}>
             <Image
-              src="/logo-3.svg"
+              src={fullLogoSrc}
               alt="Logo"
               width={180}
               height={40}
               className="w-32 sm:w-40"
+              unoptimized={!!logoUrl}
             />
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-10">
-            {navLinks.map((link, index) =>
+            {displayNavLinks.map((link: any, index: number) =>
               link.dropdown ? (
                 <div key={index} className="relative group py-4">
                   <button className="flex items-center gap-1 font-semibold text-white/90 hover:text-[#E3FFCD] transition-colors cursor-pointer">
@@ -105,7 +125,7 @@ export default function Header() {
                   </button>
                   <div className="absolute top-12 ltr:left-0 rtl:right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform ltr:origin-top-left rtl:origin-top-right translate-y-2 group-hover:translate-y-0 overflow-hidden">
                     <div className="py-2 flex flex-col">
-                      {link.dropdown.map((sublink, i) => (
+                      {link.dropdown.map((sublink: any, i: number) => (
                         <Link
                           key={i}
                           href={sublink.href}
@@ -132,9 +152,9 @@ export default function Header() {
           {/* Desktop CTA + Mobile toggle */}
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
-            <Link href="/contact" className="hidden sm:block">
+            <Link href={cta?.href ? `/${cta.href}` : "/contact"} className="hidden sm:block">
               <button className="flex items-center gap-2 bg-white rounded-full py-3 px-6 text-xs uppercase tracking-[0.1em] font-bold text-[#013228] cursor-pointer hover:bg-[#d4ffb8] transition-colors group">
-                Get Started
+                {cta?.text || "Get Started"}
                 <IoIosArrowRoundForward
                   size={24}
                   className="transition-transform duration-300 ltr:group-hover:translate-x-2 rtl:group-hover:-translate-x-2 rtl:-scale-x-100"
@@ -168,7 +188,7 @@ export default function Header() {
       >
         <div className="flex flex-col h-full pt-24 px-8 pb-8">
           <nav className="flex-1 flex flex-col gap-2 overflow-y-auto">
-            {navLinks.map((link, index) =>
+            {displayNavLinks.map((link: any, index: number) =>
               link.dropdown ? (
                 <div
                   key={index}
@@ -198,7 +218,7 @@ export default function Header() {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    {link.dropdown.map((sublink, i) => (
+                    {link.dropdown.map((sublink: any, i: number) => (
                       <Link
                         key={i}
                         href={sublink.href}
@@ -239,9 +259,9 @@ export default function Header() {
           </nav>
 
           <div className="pt-6 border-t border-white/10">
-            <Link href="/contact" onClick={() => setMobileOpen(false)}>
+            <Link href={cta?.href ? `/${cta.href}` : "/contact"} onClick={() => setMobileOpen(false)}>
               <button className="group w-full flex items-center justify-center gap-2 bg-white rounded-2xl py-4 px-6 text-sm uppercase tracking-[0.1em] font-bold text-[#013228] hover:bg-[#013228] hover:text-[#E3FFCD] transition-all duration-300 border border-transparent hover:border-[#E3FFCD]">
-                Get Started
+                {cta?.text || "Get Started"}
                 <IoIosArrowRoundForward
                   size={24}
                   className="transition-transform duration-300 ltr:group-hover:translate-x-2 rtl:group-hover:-translate-x-2 rtl:-scale-x-100"

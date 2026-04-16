@@ -1,15 +1,21 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import ResourceCard from "@/components/resources/ResourceCard";
-import { getResourcesByCategory } from "@/data/resources";
+import { getAllUseCases } from "@/data/loader";
 
 export const metadata = {
-  title: "HR Toolkit | Human Systems",
-  description: "Explore our HR Toolkit.",
+  title: "Use Cases | Human Systems",
+  description: "Explore how our customers use Human Systems.",
 };
 
-export default function HRToolkitPage() {
-  const toolkitItems = getResourcesByCategory("HR Toolkit");
+export default async function UseCasesPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const response = await getAllUseCases(lang);
+  const useCases = response?.data || [];
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] text-[#1A1A1A] selection:bg-emerald-100 pb-24">
@@ -28,14 +34,14 @@ export default function HRToolkitPage() {
 
           <div className="max-w-3xl">
             <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold border border-gray-200 rounded-full text-[#013228] uppercase tracking-widest bg-gray-50">
-              Resources
+              Customer Stories
             </span>
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-[#013228]">
-              HR <span className="text-gray-900">Toolkit</span>
+              Use <span className="text-gray-900">Cases</span>
             </h1>
             <p className="text-lg text-gray-500 font-medium leading-relaxed">
-              Templates, guides, and practical tools to elevate your people
-              operations.
+              Real world examples of how companies are transforming their HR
+              processes with Human Systems.
             </p>
           </div>
         </div>
@@ -43,11 +49,28 @@ export default function HRToolkitPage() {
 
       <section className="max-w-7xl mx-auto px-6 md:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {toolkitItems.map((item) => (
-            <div key={item.id} className="h-full">
-              <ResourceCard resource={item} basePath="/resources/hr-toolkit" />
-            </div>
-          ))}
+          {useCases.length > 0 ? (
+            useCases.map((item: any) => {
+              const formattedResource = {
+                id: item.id.toString(),
+                category: item.tag || "Use Cases",
+                title: item.title,
+                slug: item.slug,
+                excerpt: item.description,
+                date: item.date,
+                readTime: item.read,
+                content: item.content || "",
+              };
+
+              return (
+                <div key={item.id} className="h-full">
+                  <ResourceCard resource={formattedResource as any} basePath="/resources/use-cases" />
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-gray-500 font-medium">No use cases available currently.</p>
+          )}
         </div>
       </section>
     </main>

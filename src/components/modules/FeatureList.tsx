@@ -2,7 +2,9 @@ import React from "react";
 import { HiOutlineCheck } from "react-icons/hi";
 import type { Module } from "@/data/modules";
 
-export default function FeatureList({ module }: { module: Module }) {
+export default function FeatureList({ module }: { module: any }) {
+    const features = module.featureList?.lists || module.features || [];
+
     return (
         <section className="py-20 px-6 bg-white">
             <div className="max-w-7xl mx-auto">
@@ -24,12 +26,14 @@ export default function FeatureList({ module }: { module: Module }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    {module.features.map((feature, i) => (
+                    {features.map((feature: any, i: number) => {
+                        const featureText = feature.text || feature.title || feature;
+                        return (
                         <div
                             key={i}
                             className="group flex items-start gap-4 p-6 rounded-[24px] border border-gray-200 bg-[#F9FBF8] hover:bg-[#013228] hover:border-transparent transition-all duration-500 cursor-default"
                         >
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#E3FFCD] group-hover:bg-white/10 flex items-center justify-center transition-colors duration-500">
+                            <div className="shrink-0 w-10 h-10 rounded-xl bg-[#E3FFCD] group-hover:bg-white/10 flex items-center justify-center transition-colors duration-500">
                                 <HiOutlineCheck
                                     size={20}
                                     className="text-[#013228] group-hover:text-[#E3FFCD] transition-colors duration-500"
@@ -37,11 +41,11 @@ export default function FeatureList({ module }: { module: Module }) {
                             </div>
                             <div>
                                 <p className="text-lg font-bold text-gray-900 group-hover:text-white transition-colors duration-500">
-                                    {feature}
+                                    {featureText}
                                 </p>
                             </div>
                         </div>
-                    ))}
+                    )})}
                 </div>
             </div>
         </section>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { HiOutlineArrowNarrowRight, HiOutlineArrowNarrowLeft } from "react-icons/hi";
 import { modules, type Module } from "@/data/modules";
 
-export default function ModuleNavigation({ module }: { module: Module }) {
+export default function ModuleNavigation({ module }: { module: any }) {
     const currentIndex = modules.findIndex((m) => m.slug === module.slug);
     const prevModule = currentIndex > 0 ? modules[currentIndex - 1] : null;
     const nextModule =

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Sora, DM_Sans } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/homepage/Footer";
-import { cookies } from "next/headers";
+import { getGlobalData } from "@/data/loader";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -26,18 +26,25 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }>) {
-  const cookieStore = await cookies();
-  const googtrans = cookieStore.get("googtrans")?.value;
-  const lang = googtrans?.split("/").pop() || "en";
+  const { lang } = await params;
   const dir = lang === "ar" ? "rtl" : "ltr";
+
+  // Fetch Global Data for Header & (future) Footer Layouts safely
+  const globalResponse = await getGlobalData(lang).catch(() => null);
+  const globalData = globalResponse?.data?.attributes || globalResponse?.data || globalResponse?.data?.[0];
+  const globalHeader = (globalData?.blocks || []).find(
+    (b: any) => b.__component === "global.header"
+  );
 
   return (
     <html lang={lang} dir={dir} className={`${sora.variable} ${dmSans.variable}`}>
       <body className="antialiased">
-        <Header />
+        <Header data={globalHeader} />
         {children}
         <Footer />
       </body>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import React from "react";
 import {
   MdOutlineSecurity,
   MdOutlineAnalytics,
@@ -6,27 +7,31 @@ import {
   MdOutlineLan,
 } from "react-icons/md";
 
-export default function PlatformBenefits() {
-  const benefits = [
+const iconMap = [
+  <MdOutlineSecurity size={24} key="sec" />,
+  <MdOutlineAnalytics size={24} key="ana" />,
+  <MdAutoFixHigh size={24} key="aut" />,
+  <MdOutlineLan size={24} key="lan" />,
+];
+
+export default function PlatformBenefits({ data }: any) {
+  const { tag, title, description, cards } = data || {};
+  const benefits = cards && cards.length > 0 ? cards : [
     {
       title: "Secure & GDPR Compliant",
       description: "Enterprise-grade data encryption and role-based access ensure your HR data remains protected and compliant.",
-      icon: <MdOutlineSecurity size={24} />,
     },
     {
       title: "HR Analytics & Reporting",
       description: "Real-time dashboards providing deep insights into headcount, turnover trends, and payroll expenses.",
-      icon: <MdOutlineAnalytics size={24} />,
     },
     {
       title: "Workflow Automation",
       description: "Eliminate manual overhead by automating approvals, payroll runs, and employee onboarding tasks.",
-      icon: <MdAutoFixHigh size={24} />,
     },
     {
       title: "Multi-Tenant Architecture",
       description: "Isolated, customizable instances for every client with independent branding and configuration.",
-      icon: <MdOutlineLan size={24} />,
     },
   ];
 
@@ -60,25 +65,39 @@ export default function PlatformBenefits() {
               <div className="flex items-center gap-3">
                 <div className="h-px w-8 bg-[#013228]" />
                 <span className="text-sm font-bold uppercase tracking-widest text-[#013228]">
-                  Platform Benefits
+                  {tag || "Platform Benefits"}
                 </span>
               </div>
               <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 tracking-tight leading-[1.1]">
-                Scale your operations with{" "}
-                <span className="text-[#013228]">confidence.</span>
+                {title ? (
+                  title.split(" ").map((t: string, i: number, arr: any[]) => (
+                    <React.Fragment key={i}>
+                      {i === arr.length - 1 ? (
+                        <span className="text-[#013228]">{t}</span>
+                      ) : (
+                        <>{t} </>
+                      )}
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <>
+                    Scale your operations with{" "}
+                    <span className="text-[#013228]">confidence.</span>
+                  </>
+                )}
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed max-w-xl">
-                Built with enterprise-grade security and multi-tenant architecture to power your HR operations at any scale.
+                {description || "Built with enterprise-grade security and multi-tenant architecture to power your HR operations at any scale."}
               </p>
             </div>
 
             {/* Benefits Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-10">
-              {benefits.map((benefit, index) => (
+              {benefits.map((benefit: any, index: number) => (
                 <div key={index} className="group flex flex-col gap-4">
                   {/* Icon: Using #013228 for all icons for a more professional look */}
                   <div className="w-12 h-12 rounded-xl bg-[#013228]/5 flex items-center justify-center text-[#013228] transition-colors group-hover:bg-[#013228] group-hover:text-white">
-                    {benefit.icon}
+                    {iconMap[index % iconMap.length]}
                   </div>
 
                   <div className="space-y-2">

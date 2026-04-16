@@ -4,11 +4,25 @@ import React, { useState } from "react";
 import { Check } from "lucide-react";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
-export default function PricingCards({ pricingData }: any) {
+export default function PricingCards({
+  pricingData,
+  fallbackData,
+}: {
+  pricingData?: any;
+  fallbackData?: any;
+}) {
   const [isAnnual, setIsAnnual] = useState(true);
 
-  // Safety check: if pricingData is not an array, don't crash
-  if (!Array.isArray(pricingData)) return null;
+  // Safely extract the dynamic cards array. If missing or empty, use fallback.
+  const dynamicCards = pricingData?.cards;
+  const cardsToRender =
+    Array.isArray(dynamicCards) && dynamicCards.length > 0
+      ? dynamicCards
+      : Array.isArray(fallbackData)
+      ? fallbackData
+      : [];
+
+  if (!cardsToRender.length) return null;
 
   return (
     <section className="py-20 px-6 bg-white">
@@ -48,7 +62,7 @@ export default function PricingCards({ pricingData }: any) {
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {pricingData.map((plan: any) => (
+          {cardsToRender.map((plan: any) => (
             <div
               key={plan.id || plan.title}
               className={`relative rounded-[40px] p-10 flex flex-col transition-all duration-500 hover:-translate-y-2 ${

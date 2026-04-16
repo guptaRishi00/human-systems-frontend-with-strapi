@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { HiCheck } from "react-icons/hi";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
-export default function Pricing({ pricingData }: any) {
+export default function Pricing({ pricingData, fallbackData }: any) {
   const [isAnnual, setIsAnnual] = useState(true);
 
-  if (!Array.isArray(pricingData) || pricingData.length === 0) return null;
+  const { tag, title, description, discount, cards } = pricingData || {};
+  const plans = (cards && cards.length > 0) ? cards : fallbackData;
+
+  if (!Array.isArray(plans) || plans.length === 0) return null;
 
   return (
     <div className="w-full min-h-screen bg-white">
@@ -21,24 +24,22 @@ export default function Pricing({ pricingData }: any) {
             {/* Fixed Badge Contrast */}
             <div className="w-fit px-4 py-1.5 border border-emerald-500/30 bg-emerald-500/10 rounded-full">
               <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">
-                Pricing Plans
+                {tag || "Pricing Plans"}
               </span>
             </div>
             {/* Fixed Heading Contrast: Changed to white/emerald-50 */}
             <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              Choose Your Ideal HR Plan
+              {title || "Choose Your Ideal HR Plan"}
             </h2>
             <p className="text-emerald-100/60 text-lg max-w-2xl mx-auto">
-              Flexible pricing tailored for businesses of all sizes — from
-              startups to enterprise. All plans include multi-tenant security
-              and GDPR compliance.
+              {description || "Flexible pricing tailored for businesses of all sizes — from startups to enterprise. All plans include multi-tenant security and GDPR compliance."}
             </p>
           </div>
 
           {/* --- Toggle Switch --- */}
           <div className="flex items-center justify-center mt-12 gap-6">
             <span className="text-xs font-bold text-emerald-400 tracking-wider">
-              SAVE 20%
+              {discount || "SAVE 20%"}
             </span>
             <div className="bg-[#062d26] p-1 rounded-full flex items-center border border-emerald-800/50 shadow-inner">
               <button
@@ -67,11 +68,11 @@ export default function Pricing({ pricingData }: any) {
 
         {/* --- Pricing Cards Grid --- */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-12">
-          {pricingData.map((plan: any) => (
+          {plans.map((plan: any) => (
             <div
               key={plan.id || plan.title}
               className={`relative bg-[#0a2e26]/80 backdrop-blur-md rounded-[32px] p-8 border transition-all duration-300 hover:scale-[1.02] flex flex-col ${
-                plan.highlight
+                plan.highlight || plan.highlighted
                   ? "border-emerald-400/50 shadow-2xl shadow-emerald-900/20"
                   : "border-emerald-800/30"
               }`}
@@ -80,7 +81,7 @@ export default function Pricing({ pricingData }: any) {
               {plan.badge && (
                 <div className="absolute top-6 right-0 bg-[#d1e5c4] text-[#04231d] text-[10px] font-black px-4 py-1.5 rounded-l-md shadow-lg z-10">
                   {plan.badge.toUpperCase()}
-                  <div className="absolute right-0 top-full w-0 h-0 border-t-[4px] border-t-[#a7bc9b] border-r-[4px] border-r-transparent"></div>
+                  <div className="absolute right-0 top-full w-0 h-0 border-t-4 border-t-[#a7bc9b] border-r-4 border-r-transparent"></div>
                 </div>
               )}
 
@@ -105,7 +106,7 @@ export default function Pricing({ pricingData }: any) {
 
               <div className="h-px bg-emerald-800/40 mb-8" />
 
-              <div className="flex-grow">
+              <div className="grow">
                 <h4 className="font-bold text-sm uppercase tracking-[0.2em] mb-6 text-white">
                   Core Features
                 </h4>
@@ -125,15 +126,15 @@ export default function Pricing({ pricingData }: any) {
                 </ul>
               </div>
 
-              <Link href="/contact">
+              <Link href={plan.cta_link || "/contact"}>
                 <button
                   className={`w-full group py-4 px-6 rounded-full font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 transition-all ${
-                    plan.highlight
+                    plan.highlight || plan.highlighted
                       ? "bg-[#d1e5c4] text-[#04231d] hover:bg-white"
                       : "bg-transparent text-white border border-emerald-700 hover:bg-[#d1e5c4] hover:text-[#04231d] cursor-pointer"
                   }`}
                 >
-                  GET STARTED
+                  {plan.cta || "GET STARTED"}
                   <HiOutlineArrowNarrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>

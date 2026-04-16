@@ -1,15 +1,21 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import ResourceCard from "@/components/resources/ResourceCard";
-import { getResourcesByCategory } from "@/data/resources";
+import { getAllCompliances } from "@/data/loader";
 
 export const metadata = {
   title: "Compliance | Human Systems",
   description: "Stay up to date with HR compliance and labor laws.",
 };
 
-export default function CompliancePage() {
-  const items = getResourcesByCategory("Compliance");
+export default async function CompliancePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const response = await getAllCompliances(lang);
+  const complainces = response?.data || [];
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] text-[#1A1A1A] selection:bg-emerald-100 pb-24">
@@ -43,11 +49,28 @@ export default function CompliancePage() {
 
       <section className="max-w-7xl mx-auto px-6 md:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {items.map((item) => (
-            <div key={item.id} className="h-full">
-              <ResourceCard resource={item} basePath="/resources/compliance" />
-            </div>
-          ))}
+          {complainces.length > 0 ? (
+            complainces.map((item: any) => {
+              const formattedResource = {
+                id: item.id.toString(),
+                category: item.tag || "Compliance",
+                title: item.title,
+                slug: item.slug,
+                excerpt: item.description,
+                date: item.date,
+                readTime: item.read,
+                content: item.content || "",
+              };
+
+              return (
+                <div key={item.id} className="h-full">
+                  <ResourceCard resource={formattedResource as any} basePath="/resources/compliance" />
+                </div>
+              );
+            })
+          ) : (
+            <p className="text-gray-500 font-medium">No compliances available currently.</p>
+          )}
         </div>
       </section>
     </main>

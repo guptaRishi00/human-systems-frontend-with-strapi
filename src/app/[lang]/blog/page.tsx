@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ChevronRight, Clock } from "lucide-react";
 import BlogCard from "@/components/blog/BlogCard";
-import { getAllBlogs } from "@/data/blogs";
+import { getAllBlogsData } from "@/data/loader";
+import { getStrapiURL } from "@/utils/get-strapi-url";
 
 export const metadata = {
   title: "Blog — Socle RH | Human Systems",
@@ -11,10 +12,23 @@ export const metadata = {
     "Read our latest insights on HR tech, company culture, and performance management.",
 };
 
-export default function BlogListingPage() {
-  const allBlogs = getAllBlogs();
-  const featuredBlog = allBlogs[0];
+export default async function BlogListingPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  
+  // Fetch dynamic localized blogs
+  const strapiData = await getAllBlogsData(lang);
+  const allBlogs = strapiData?.data || [];
+
+  const featuredBlog = allBlogs[0]?.attributes || allBlogs[0]; // Handle Strapi v4/v5 structure
   const remainingBlogs = allBlogs.slice(1);
+
+  // Helper for the featured image
+  const featuredImageUrl = featuredBlog?.image?.data?.attributes?.url || featuredBlog?.image?.url;
+  const fullFeaturedImageUrl = featuredImageUrl ? `${getStrapiURL()}${featuredImageUrl}` : "/fallback-image.jpg";
 
   return (
     <main className="min-h-screen bg-white text-[#1A1A1A]">
@@ -64,19 +78,15 @@ export default function BlogListingPage() {
         {/* Featured Post */}
         {featuredBlog && (
           <div className="mb-32">
-            {/* 1. Converted outer div to a Link so the whole card is clickable */}
-            {/* 2. Set default border to gray-200/300 and added hover:border-[#013228] */}
             <Link
               href={`/blog/${featuredBlog.slug}`}
               className="block group relative border border-gray-500 hover:border-[#013228] rounded-[40px] overflow-hidden bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
               <div className="grid grid-cols-1 lg:grid-cols-12 h-full">
-                {/* Added group-hover to inner border so the divider matches on hover */}
                 <div className="lg:col-span-7 aspect-video lg:aspect-auto border-b lg:border-b-0 lg:border-r border-gray-200 group-hover:border-[#013228] transition-colors duration-300 overflow-hidden">
                   <img
-                    src={featuredBlog.coverImage}
+                    src={fullFeaturedImageUrl}
                     alt={featuredBlog.title}
-                    // Added a subtle scale effect to the image on hover
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
@@ -86,17 +96,16 @@ export default function BlogListingPage() {
                       Featured
                     </span>
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-                      <Clock size={12} /> {featuredBlog.readTime}
+                      <Clock size={12} /> {featuredBlog.read}
                     </span>
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#013228]">
                     {featuredBlog.title}
                   </h2>
                   <p className="text-gray-600 mb-10 leading-relaxed line-clamp-4">
-                    {featuredBlog.excerpt}
+                    {featuredBlog.content_title} {/* Using content_title as excerpt */}
                   </p>
 
-                  {/* 3. Changed from <Link> to <div> to prevent nested link errors */}
                   <div className="inline-flex w-max items-center justify-center gap-3 bg-[#013228] text-[#E3FFCD] px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest group-hover:scale-[1.02] group-hover:bg-[#024a3c] transition-all">
                     Read Article <ChevronRight size={18} />
                   </div>
@@ -111,7 +120,7 @@ export default function BlogListingPage() {
           <h3 className="text-2xl font-black text-[#013228] uppercase tracking-tighter">
             Latest Updates
           </h3>
-          <div className="h-[2px] flex-grow bg-[#013228]"></div>
+          <div className="h-[2px] grow bg-[#013228]"></div>
           <span className="text-sm font-bold text-gray-400">
             {remainingBlogs.length} ARTICLES
           </span>
@@ -119,9 +128,10 @@ export default function BlogListingPage() {
 
         {/* Grid Container */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {remainingBlogs.map((blog) => (
-            <BlogCard key={blog.id} blog={blog} />
-          ))}
+          {remainingBlogs.map((blogItem: any) => {
+            const blog = blogItem.attributes || blogItem;
+            return <BlogCard key={blog.slug} blog={blog} />;
+          })}
         </div>
       </section>
     </main>

@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import BlogCard from "@/components/blog/BlogCard";
-import { getRecentBlogs } from "@/data/blogs";
+import { getAllBlogsData } from "@/data/loader";
 
-export default function RecentBlogs() {
-  const recentBlogs = getRecentBlogs(3);
+export default async function RecentBlogs({ data, lang }: any) {
+  const { tag, title, cta } = data || {};
+  const strapiData = await getAllBlogsData(lang || "en");
+  const recentBlogs = strapiData?.data?.slice(0, 3) || [];
 
   return (
     <section className="relative w-full py-24 px-6 md:px-20 bg-white overflow-hidden">
@@ -15,19 +17,30 @@ export default function RecentBlogs() {
             <div className="flex items-center gap-3">
               <div className="h-px w-6 bg-[#013228]" />
               <span className="text-sm font-bold uppercase tracking-widest text-[#013228]">
-                Latest Insights
+                {tag || "Latest Insights"}
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#013228] leading-tight">
-              Read Our <br className="hidden md:block" /> Latest Blogs
+              {title ? (
+                title.split("\\n").map((t: string, i: number) => (
+                  <span key={i}>
+                    {t}
+                    <br className="hidden md:block" />
+                  </span>
+                ))
+              ) : (
+                <>
+                  Read Our <br className="hidden md:block" /> Latest Blogs
+                </>
+              )}
             </h2>
           </div>
 
           <Link
-            href="/blog"
+            href={cta ? `/${cta.href}` : "/blog"}
             className="group inline-flex items-center gap-2 text-sm font-bold text-[#013228] uppercase tracking-widest hover:text-emerald-700 transition-colors"
           >
-            VIEW ALL POSTS
+            {cta?.text || "VIEW ALL POSTS"}
             <HiOutlineArrowNarrowRight
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"
@@ -37,11 +50,14 @@ export default function RecentBlogs() {
 
         {/* Blog Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {recentBlogs.map((blog) => (
-            <div key={blog.id} className="h-full">
-              <BlogCard blog={blog} />
-            </div>
-          ))}
+          {recentBlogs.map((blogItem: any) => {
+            const blog = blogItem.attributes || blogItem;
+            return (
+              <div key={blog.id || blog.slug} className="h-full">
+                <BlogCard blog={blog} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

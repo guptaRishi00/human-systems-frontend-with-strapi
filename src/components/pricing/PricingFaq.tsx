@@ -30,8 +30,11 @@ const faqs = [
     },
 ];
 
-export default function PricingFaq() {
+export default function PricingFaq({ data }: { data?: any }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+    const { tag, title, description, cards } = data || {};
+    const displayFaqs = cards && cards.length > 0 ? cards : faqs;
 
     return (
         <section className="py-20 px-6 bg-white">
@@ -40,20 +43,20 @@ export default function PricingFaq() {
                     <div className="flex items-center justify-center gap-3 mb-6">
                         <div className="h-px w-8 bg-[#013228]" />
                         <span className="text-sm font-bold uppercase tracking-widest text-[#013228]">
-                            FAQ
+                            {tag || "FAQ"}
                         </span>
                         <div className="h-px w-8 bg-[#013228]" />
                     </div>
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                        Common Questions
+                        {title || "Common Questions"}
                     </h2>
                     <p className="text-gray-500 text-lg">
-                        Everything you need to know about plans, billing, and support.
+                        {description || "Everything you need to know about plans, billing, and support."}
                     </p>
                 </div>
 
                 <div className="space-y-4">
-                    {faqs.map((faq, index) => (
+                    {displayFaqs.map((faq: any, index: number) => (
                         <div
                             key={index}
                             className={`rounded-[20px] border transition-all duration-300 overflow-hidden ${openIndex === index
@@ -71,7 +74,7 @@ export default function PricingFaq() {
                                     className={`text-lg font-bold transition-colors ${openIndex === index ? "text-[#013228]" : "text-gray-900"
                                         }`}
                                 >
-                                    {faq.q}
+                                    {faq.question || faq.q}
                                 </span>
                                 <HiOutlineChevronDown
                                     size={20}
@@ -83,7 +86,7 @@ export default function PricingFaq() {
                             </button>
                             {openIndex === index && (
                                 <div className="px-6 pb-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                                    <p className="text-gray-600 leading-relaxed">{faq.a}</p>
+                                    <p className="text-gray-600 leading-relaxed">{faq.answer || faq.a}</p>
                                 </div>
                             )}
                         </div>

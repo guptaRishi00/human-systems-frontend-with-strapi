@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-const Faq = () => {
+const Faq = ({ data }: any) => {
   const [openIndex, setOpenIndex] = useState(0); // Set first item open by default
+
+  const { tag, title, description, cards } = data || {};
 
   const faqContent = [
     {
@@ -25,6 +27,8 @@ const Faq = () => {
     },
   ];
 
+  const faqs = (cards && cards.length > 0) ? cards : faqContent;
+
   return (
     <section className="relative w-full py-24 px-6 md:px-20 bg-white overflow-hidden">
       {/* Subtle background question marks (Watermarks) */}
@@ -33,19 +37,19 @@ const Faq = () => {
         {/* --- Left Column: Header --- */}
         <div className="flex flex-col items-start space-y-6">
           <div className="w-fit px-4 py-1 border border-gray-900 rounded-full">
-            <p className="text-lg">FAQ's</p>
+            <p className="text-lg">{tag || "FAQ's"}</p>
           </div>
           <h2 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
-            Frequently Asked Questions
+            {title || "Frequently Asked Questions"}
           </h2>
           <p className="text-gray-500 text-lg max-w-md leading-relaxed">
-            Find answers to the most common questions about Human Systems' features, security, and getting started with the platform.
+            {description || "Find answers to the most common questions about Human Systems' features, security, and getting started with the platform."}
           </p>
         </div>
 
         {/* --- Right Column: Accordion --- */}
         <div className="space-y-4">
-          {faqContent.map((faq, index) => {
+          {faqs.map((faq: any, index: number) => {
             const isOpen = openIndex === index;
             return (
               <div
@@ -72,7 +76,7 @@ const Faq = () => {
 
                 {isOpen && (
                   <div className="px-6 pb-8 text-gray-500 leading-relaxed text-base">
-                    {faq.content}
+                    {faq.description}
                   </div>
                 )}
               </div>

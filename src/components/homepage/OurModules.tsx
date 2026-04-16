@@ -1,54 +1,13 @@
 import Link from "next/link";
 import React from "react";
-import {
-  HiOutlineUserGroup,
-  HiOutlineCalendar,
-  HiOutlineShieldCheck,
-  HiOutlineChartBar,
-  HiOutlineCurrencyDollar,
-  HiOutlineClipboardList,
-  HiOutlineArrowNarrowRight,
-} from "react-icons/hi";
+import { HiOutlineArrowNarrowRight } from "react-icons/hi";
+import { getStrapiURL } from "@/utils/get-strapi-url";
+import { getAllModulesData } from "@/data/loader";
 
-export default function OurModules() {
-  const modules = [
-    {
-      title: "Core HR & Employee Admin",
-      description:
-        "Centralized employee profiles, contract management with versioning, automated probation alerts, and customizable onboarding & offboarding checklists.",
-      icon: <HiOutlineUserGroup size={32} />,
-    },
-    {
-      title: "Leave & Absence Management",
-      description:
-        "Customizable leave policies, automated accruals, multi-step approval workflows, shared team calendars, and real-time leave balance reporting.",
-      icon: <HiOutlineCalendar size={32} />,
-    },
-    {
-      title: "Document Management (HR Vault)",
-      description:
-        "Secure, permission-based document repository with categorization, role-based access control, and automated expiration alerts for work permits and certifications.",
-      icon: <HiOutlineShieldCheck size={32} />,
-    },
-    {
-      title: "Performance Management",
-      description:
-        "Goal setting & tracking with OKRs/KPIs, cascading goals from company to individual, performance review cycles, and self-assessment forms.",
-      icon: <HiOutlineChartBar size={32} />,
-    },
-    {
-      title: "Payroll Management",
-      description:
-        "Automated payroll runs with salary structure configuration, tax and deduction management, payslip generation, distribution, and compliance reporting.",
-      icon: <HiOutlineCurrencyDollar size={32} />,
-    },
-    {
-      title: "Expense Management",
-      description:
-        "Streamlined expense claim submission with digital receipt upload, customizable expense categories, and multi-level approval workflows with analytics.",
-      icon: <HiOutlineClipboardList size={32} />,
-    },
-  ];
+export default async function OurModules({ data, lang = "en" }: any) {
+  const { tag, title, description } = data || {};
+  const strapiData = await getAllModulesData(lang);
+  const modulesList = strapiData?.data || [];
 
   return (
     <section className="py-20 px-6 bg-[#FCFDFB]">
@@ -57,32 +16,39 @@ export default function OurModules() {
         <div className="flex flex-col items-center text-center mb-16">
           <div className="w-fit px-6 py-1.5 border border-gray-900 rounded-full mb-6">
             <span className="text-sm font-semibold uppercase tracking-widest">
-              Our Modules
+              {tag}
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Comprehensive HR Modules
+            {title}
           </h2>
           <p className="max-w-2xl text-gray-500 text-lg leading-relaxed">
-            Human Systems provides a complete suite of HR modules built with
-            multi-tenant architecture, robust security, and role-based access
-            controls.
+            {description ||
+              "Discover our comprehensive suite of HR modules designed to streamline your workforce management and enhance employee experience."}
           </p>
         </div>
 
         {/* Grid Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {modules.map((module, index) => (
-            /* Replaced outer div with Link */
+          {modulesList.map((moduleItem: any, index: number) => {
+            const module = moduleItem.attributes || moduleItem;
+            const iconUrl = module.icon?.data?.attributes?.url || module.icon?.url;
+            const fullIconUrl = iconUrl ? `${getStrapiURL()}${iconUrl}` : null;
+
+            return (
             <Link
-              href="/modules"
+              href={`/modules/${module.slug}`}
               key={index}
               className="group relative bg-white border border-gray-300 p-10 rounded-[40px] 
                          transition-all hover:border-[#013228] cursor-pointer flex flex-col h-full"
             >
               {/* Icon */}
-              <div className="text-gray-900 mb-8 transition-all duration-500 transform group-hover:scale-110 origin-left">
-                {module.icon}
+              <div className="mb-8 transition-all duration-500 transform group-hover:scale-110 origin-left h-8 w-8 relative text-gray-900">
+                {fullIconUrl ? (
+                  <img src={fullIconUrl} alt={module.title} className="w-full h-full object-contain" />
+                ) : (
+                  <div className="w-8 h-8 bg-gray-200 rounded-full" />
+                )}
               </div>
 
               {/* Title */}
@@ -91,7 +57,7 @@ export default function OurModules() {
               </h3>
 
               {/* Description */}
-              <p className="text-gray-500 mb-10 leading-relaxed transition-colors duration-500 flex-grow">
+              <p className="text-gray-500 mb-10 leading-relaxed transition-colors duration-500 grow">
                 {module.description}
               </p>
 
@@ -110,7 +76,7 @@ export default function OurModules() {
                 />
               </div>
             </Link>
-          ))}
+          )})}
         </div>
       </div>
     </section>

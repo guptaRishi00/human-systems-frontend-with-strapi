@@ -9,7 +9,9 @@ const roleColors: Record<string, { bg: string; text: string; hoverBg: string }> 
     System: { bg: "bg-gray-100", text: "text-gray-800", hoverBg: "bg-gray-800/20" },
 };
 
-export default function UserStories({ module }: { module: Module }) {
+export default function UserStories({ module }: { module: any }) {
+    const groups = module.userStories?.points || module.featureGroups || [];
+
     return (
         <section className="py-20 px-6 bg-[#F9FBF8]">
             <div className="max-w-7xl mx-auto">
@@ -31,7 +33,11 @@ export default function UserStories({ module }: { module: Module }) {
                 </div>
 
                 <div className="space-y-12 max-w-5xl mx-auto">
-                    {module.featureGroups.map((group, gi) => (
+                    {groups.map((group: any, gi: number) => {
+                        const groupName = group.groupName || group.title || group.name || `Group ${gi + 1}`;
+                        const stories = group.cards || group.stories || [];
+
+                        return (
                         <div key={gi}>
                             {/* Group header */}
                             <div className="flex items-center gap-4 mb-6">
@@ -39,14 +45,16 @@ export default function UserStories({ module }: { module: Module }) {
                                     {String(gi + 1).padStart(2, "0")}
                                 </span>
                                 <h3 className="text-2xl font-bold text-gray-900">
-                                    {group.groupName}
+                                    {groupName}
                                 </h3>
                             </div>
 
                             {/* Stories */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-14">
-                                {group.stories.map((story, si) => {
-                                    const colors = roleColors[story.role] || roleColors["System"];
+                                {stories.map((story: any, si: number) => {
+                                    const role = story.role || "System";
+                                    const storyText = story.story || story.text || story.description;
+                                    const colors = roleColors[role] || roleColors["System"];
                                     return (
                                         <div
                                             key={si}
@@ -55,17 +63,17 @@ export default function UserStories({ module }: { module: Module }) {
                                             <span
                                                 className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 ${colors.bg} ${colors.text}`}
                                             >
-                                                {story.role}
+                                                {role}
                                             </span>
                                             <p className="text-gray-600 leading-relaxed">
-                                                As a <strong>{story.role}</strong>, {story.story}
+                                                As a <strong>{role}</strong>, {storyText}
                                             </p>
                                         </div>
                                     );
                                 })}
                             </div>
                         </div>
-                    ))}
+                    )})}
                 </div>
             </div>
         </section>
