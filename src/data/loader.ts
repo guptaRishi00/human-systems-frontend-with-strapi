@@ -330,6 +330,16 @@ export const GlobalQuery = (locale: string = "en") =>
                 },
               },
             },
+            "global.footer": {
+              populate: {
+                logo:{
+                  fields: ["url"],
+                  
+                },
+                social_links:true,
+                contacts:true,
+              }
+            }
           },
         },
       },

@@ -10,16 +10,55 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import { getStrapiURL } from "@/utils/get-strapi-url";
 
-const Footer = () => {
+const Footer = ({ data }: { data?: any }) => {
   const currentYear = new Date().getFullYear();
 
-  const socialLinks = [
-    { icon: <Facebook size={18} />, href: "#", label: "Facebook" },
-    { icon: <Linkedin size={18} />, href: "#", label: "LinkedIn" },
-    { icon: <Instagram size={18} />, href: "#", label: "Instagram" },
-    { icon: <Twitter size={18} />, href: "#", label: "X" },
-  ];
+  const { description, logo, social_links, contacts } = data || {};
+
+  const logoUrl = logo?.data?.attributes?.url || logo?.url;
+  const fullLogoSrc = logoUrl ? `${getStrapiURL()}${logoUrl}` : "/logo-7.svg";
+
+  const descriptionText =
+    description ||
+    "Empowering businesses with a scalable, secure, and modular HR platform — from employee management to payroll and beyond.";
+
+  const getSocialIcon = (text: string) => {
+    const t = text.toLowerCase();
+    if (t.includes("facebook")) return <Facebook size={18} />;
+    if (t.includes("linkedin")) return <Linkedin size={18} />;
+    if (t.includes("instagram")) return <Instagram size={18} />;
+    if (t.includes("twitter") || t.includes("x.com")) return <Twitter size={18} />;
+    return <Facebook size={18} />; // Default fallback
+  };
+
+  const socialLinksConfig =
+    social_links && social_links.length > 0
+      ? social_links.map((s: any) => ({
+        icon: getSocialIcon(s.text),
+        href: s.href || s.text.includes("http") ? s.text : `https://${s.text}`,
+        label: s.text,
+      }))
+      : [
+        { icon: <Facebook size={18} />, href: "#", label: "Facebook" },
+        { icon: <Linkedin size={18} />, href: "#", label: "LinkedIn" },
+        { icon: <Instagram size={18} />, href: "#", label: "Instagram" },
+        { icon: <Twitter size={18} />, href: "#", label: "X" },
+      ];
+
+  const contactConfig =
+    contacts && contacts.length >= 3
+      ? {
+        location: contacts[0]?.text || "Paris, France",
+        email: contacts[1]?.text || "contact@humansystems.io",
+        phone: contacts[2]?.text || "+33 1 23 45 67 89",
+      }
+      : {
+        location: "Paris, France",
+        email: "contact@humansystems.io",
+        phone: "+33 1 23 45 67 89",
+      };
 
   const platformLinks = [
     { name: "About Us", href: "/about" },
@@ -49,19 +88,20 @@ const Footer = () => {
           <div className="space-y-6">
             <Link href="/">
               <Image
-                src="/logo-7.svg"
+                src={fullLogoSrc}
                 alt="Human Systems Logo"
                 width={180}
                 height={40}
-                className="w-32 sm:w-40 mb-10 mt-3"
+                className="w-32 sm:w-40 lg:-ml-5"
                 priority
+                unoptimized={!!logoUrl}
               />
             </Link>
             <p className="text-emerald-100/50 leading-relaxed text-sm max-w-xs">
-              Empowering businesses with a scalable, secure, and modular HR platform — from employee management to payroll and beyond.
+              {descriptionText}
             </p>
             <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
+              {socialLinksConfig.map((social: any, index: number) => (
                 <a
                   key={index}
                   href={social.href}
@@ -126,7 +166,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-sm text-emerald-100/70 leading-relaxed">
-                    Paris, France
+                    {contactConfig.location}
                   </p>
                 </div>
               </div>
@@ -137,10 +177,10 @@ const Footer = () => {
                 </div>
                 <div>
                   <a
-                    href="mailto:contact@humansystems.io"
+                    href={`mailto:${contactConfig.email}`}
                     className="text-sm text-emerald-100/70 hover:text-[#E3FFCD] transition-colors"
                   >
-                    contact@humansystems.io
+                    {contactConfig.email}
                   </a>
                 </div>
               </div>
@@ -151,10 +191,10 @@ const Footer = () => {
                 </div>
                 <div>
                   <a
-                    href="tel:+33123456789"
+                    href={`tel:${contactConfig.phone.replace(/\s+/g, '')}`}
                     className="text-sm text-emerald-100/70 hover:text-[#E3FFCD] transition-colors"
                   >
-                    +33 1 23 45 67 89
+                    {contactConfig.phone}
                   </a>
                 </div>
               </div>

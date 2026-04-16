@@ -40,13 +40,16 @@ export default async function RootLayout({
   const globalHeader = (globalData?.blocks || []).find(
     (b: any) => b.__component === "global.header"
   );
+  const globalFooter = (globalData?.blocks || []).find(
+    (b: any) => b.__component === "global.footer"
+  );
 
   return (
     <html lang={lang} dir={dir} className={`${sora.variable} ${dmSans.variable}`}>
       <body className="antialiased">
         <Header data={globalHeader} />
         {children}
-        <Footer />
+        <Footer data={globalFooter} />
       </body>
     </html>
   );

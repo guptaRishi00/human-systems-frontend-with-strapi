@@ -16,11 +16,11 @@ export default function StorySection({ data }: { data?: any }) {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
-            <div className="aspect-4/5 relative rounded-[40px] overflow-hidden shadow-2xl bg-gray-100">
+            <div className="aspect-[4/5] w-full relative overflow-hidden">
               <img
                 src={fullStoryImage}
                 alt={title || "Our Team"}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
             {/* Floating badge */}
@@ -54,7 +54,7 @@ export default function StorySection({ data }: { data?: any }) {
                 </>
               )}
             </h2>
-            
+
             {content ? (
               <div className="space-y-4">
                 {content.split("\\n\\n").map((paragraph: string, idx: number) => (
